@@ -1,0 +1,386 @@
+{
+  "sources": [
+    {
+      "source_id": "nist-ai-100-1",
+      "title": "Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
+      "publisher": "National Institute of Standards and Technology (NIST), U.S. Department of Commerce",
+      "version": "AI RMF 1.0 (NIST AI 100-1), January 2023",
+      "source_path_or_url": "data/NIST.AI.100-1.pdf",
+      "original_url": "https://doi.org/10.6028/NIST.AI.100-1",
+      "license_or_permission": "Ấn phẩm của cơ quan liên bang Hoa Kỳ (NIST); theo 17 U.S.C. §105 không được bảo hộ bản quyền tại Hoa Kỳ, phát hành miễn phí công khai qua DOI trên. Không chứa dữ liệu cá nhân/mật.",
+      "accessed_at": "2026-11-13",
+      "snapshot": {
+        "sha256": "7576edb531d9848825814ee88e28b1795d3a84b435b4b797d3670eafdc4a89f1",
+        "bytes": 1946127,
+        "pdf_creation_date": "D:20230124144546-05'00'",
+        "pdf_mod_date": "D:20250604130145-04'00'"
+      },
+      "physical_pages": 48,
+      "counted_content_pages": 40,
+      "counted_chars": 100618,
+      "counting_rule": "Đếm theo trang PDF vật lý (1-based). Loại bìa, tiêu đề, disclaimer, mục lục, danh mục hình/bảng, bìa sau và 2 trang dưới 500 ký tự gần như chỉ có hình/đoạn kết. Tài liệu không có trang tham khảo riêng. printed_page = pdf_page - 5 cho trang 6–47. gold_page trong benchmark dùng pdf_page.",
+      "extraction": {
+        "tool": "pypdf 6.21.4",
+        "normalization": "Unicode NFKC",
+        "ocr": "không cần (PDF sinh từ LaTeX, có text layer)",
+        "known_issues": [
+          "header lặp 'NIST AI 100-1 AI RMF 1.0' và footer 'Page N' cần loại bỏ",
+          "~239 chỗ ngắt dòng có gạch nối (recommenda-\ntion) cần ghép lại",
+          "một số chỗ mất khoảng trắng, ví dụ 'profilescover' (pdf p39)",
+          "Fig. 2/Fig. 3 là hình: chỉ còn chú thích",
+          "Bảng GOVERN/MAP/MEASURE/MANAGE kéo dài nhiều trang với tiêu đề '(Continued)'"
+        ]
+      },
+      "filter_fields": {
+        "part": "part1_foundational (p6–24) | part2_core_profiles (p25–39) | appendix (p40–47) — lấy từ mục lục/tiêu đề tài liệu",
+        "section": "đề xuất gán theo heading thật, vd core_function = GOVERN/MAP/MEASURE/MANAGE cho p25–38"
+      },
+      "pages": [
+        {
+          "pdf_page": 1,
+          "printed_page": null,
+          "chars": 77,
+          "counted": false,
+          "part": "front_back_matter",
+          "excluded_reason": "bìa"
+        },
+        {
+          "pdf_page": 2,
+          "printed_page": null,
+          "chars": 376,
+          "counted": false,
+          "part": "front_back_matter",
+          "excluded_reason": "trang tiêu đề"
+        },
+        {
+          "pdf_page": 3,
+          "printed_page": null,
+          "chars": 1535,
+          "counted": false,
+          "part": "front_back_matter",
+          "excluded_reason": "disclaimer + lịch cập nhật phiên bản (front matter)"
+        },
+        {
+          "pdf_page": 4,
+          "printed_page": null,
+          "chars": 1235,
+          "counted": false,
+          "part": "front_back_matter",
+          "excluded_reason": "mục lục"
+        },
+        {
+          "pdf_page": 5,
+          "printed_page": null,
+          "chars": 1639,
+          "counted": false,
+          "part": "front_back_matter",
+          "excluded_reason": "danh mục hình/bảng"
+        },
+        {
+          "pdf_page": 6,
+          "printed_page": "1",
+          "chars": 3108,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 7,
+          "printed_page": "2",
+          "chars": 3103,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 8,
+          "printed_page": "3",
+          "chars": 1874,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 9,
+          "printed_page": "4",
+          "chars": 2750,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 10,
+          "printed_page": "5",
+          "chars": 1887,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 11,
+          "printed_page": "6",
+          "chars": 2770,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 12,
+          "printed_page": "7",
+          "chars": 2964,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 13,
+          "printed_page": "8",
+          "chars": 3131,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 14,
+          "printed_page": "9",
+          "chars": 3058,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 15,
+          "printed_page": "10",
+          "chars": 1583,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 16,
+          "printed_page": "11",
+          "chars": 409,
+          "counted": false,
+          "part": "part1_foundational",
+          "excluded_reason": "chỉ có hình Fig. 3 + chú thích (409 ký tự)"
+        },
+        {
+          "pdf_page": 17,
+          "printed_page": "12",
+          "chars": 2648,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 18,
+          "printed_page": "13",
+          "chars": 2992,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 19,
+          "printed_page": "14",
+          "chars": 2784,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 20,
+          "printed_page": "15",
+          "chars": 3129,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 21,
+          "printed_page": "16",
+          "chars": 2928,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 22,
+          "printed_page": "17",
+          "chars": 2829,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 23,
+          "printed_page": "18",
+          "chars": 1678,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 24,
+          "printed_page": "19",
+          "chars": 1890,
+          "counted": true,
+          "part": "part1_foundational"
+        },
+        {
+          "pdf_page": 25,
+          "printed_page": "20",
+          "chars": 1289,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 26,
+          "printed_page": "21",
+          "chars": 2696,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 27,
+          "printed_page": "22",
+          "chars": 2439,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 28,
+          "printed_page": "23",
+          "chars": 2309,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 29,
+          "printed_page": "24",
+          "chars": 2470,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 30,
+          "printed_page": "25",
+          "chars": 2765,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 31,
+          "printed_page": "26",
+          "chars": 2094,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 32,
+          "printed_page": "27",
+          "chars": 2334,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 33,
+          "printed_page": "28",
+          "chars": 2747,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 34,
+          "printed_page": "29",
+          "chars": 2103,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 35,
+          "printed_page": "30",
+          "chars": 2063,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 36,
+          "printed_page": "31",
+          "chars": 2393,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 37,
+          "printed_page": "32",
+          "chars": 2265,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 38,
+          "printed_page": "33",
+          "chars": 2662,
+          "counted": true,
+          "part": "part2_core_profiles"
+        },
+        {
+          "pdf_page": 39,
+          "printed_page": "34",
+          "chars": 468,
+          "counted": false,
+          "part": "part2_core_profiles",
+          "excluded_reason": "đoạn kết ngắn của mục Profiles (468 ký tự)"
+        },
+        {
+          "pdf_page": 40,
+          "printed_page": "35",
+          "chars": 3127,
+          "counted": true,
+          "part": "appendix"
+        },
+        {
+          "pdf_page": 41,
+          "printed_page": "36",
+          "chars": 3026,
+          "counted": true,
+          "part": "appendix"
+        },
+        {
+          "pdf_page": 42,
+          "printed_page": "37",
+          "chars": 2062,
+          "counted": true,
+          "part": "appendix"
+        },
+        {
+          "pdf_page": 43,
+          "printed_page": "38",
+          "chars": 2705,
+          "counted": true,
+          "part": "appendix"
+        },
+        {
+          "pdf_page": 44,
+          "printed_page": "39",
+          "chars": 2644,
+          "counted": true,
+          "part": "appendix"
+        },
+        {
+          "pdf_page": 45,
+          "printed_page": "40",
+          "chars": 2703,
+          "counted": true,
+          "part": "appendix"
+        },
+        {
+          "pdf_page": 46,
+          "printed_page": "41",
+          "chars": 2163,
+          "counted": true,
+          "part": "appendix"
+        },
+        {
+          "pdf_page": 47,
+          "printed_page": "42",
+          "chars": 2453,
+          "counted": true,
+          "part": "appendix"
+        },
+        {
+          "pdf_page": 48,
+          "printed_page": null,
+          "chars": 89,
+          "counted": false,
+          "part": "front_back_matter",
+          "excluded_reason": "bìa sau"
+        }
+      ]
+    }
+  ]
+}
