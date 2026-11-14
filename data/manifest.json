@@ -8,9 +8,10 @@
       "version": "2025 Edition; PDF CreationDate D:20251225185846Z",
       "source_path_or_url": "data/AI Engineering Guidebook.pdf",
       "committed_to_repo": false,
-      "original_url": "TODO: điền URL tải chính thức từ DailyDoseofDS.com",
-      "license_or_permission": "Không tìm thấy điều khoản giấy phép/bản quyền trong PDF; bìa chỉ ghi 'FREE'. Chưa xác nhận quyền tái phân phối, vì vậy PDF không được commit. TODO: ghi kết quả xác nhận với giảng viên/tác giả.",
-      "accessed_at": "TODO: ngày tải (file cục bộ sửa lần cuối 2026-09-03)",
+      "original_url": "https://dailydoseofds.github.io/ai-engg-book/",
+      "how_to_obtain": "Đăng ký email trên trang original_url để nhận PDF miễn phí; đối chiếu sha256 bên dưới.",
+      "license_or_permission": "Không có giấy phép mở: trang phát hành ghi 'Daily Dose of Data Science © 2025 All rights reserved'; PDF không có điều khoản giấy phép, bìa chỉ ghi 'FREE' (miễn phí để đọc). Giảng viên đã đồng ý cho dùng tài liệu này trong bài lab (phi thương mại). Không commit PDF lên repo; trace chỉ chứa trích đoạn chunk phục vụ chấm bài.",
+      "accessed_at": "2026-09-03",
       "snapshot": {
         "sha256": "1273e50aceb06a003d5440c3713a9902c9dc0c8b4c86694ce64d324ae79eae2c",
         "bytes": 95382738
