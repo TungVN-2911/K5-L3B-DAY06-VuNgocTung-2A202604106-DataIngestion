@@ -1,4 +1,3 @@
-"""Read-only setup check; this is a utility, not the student pipeline solution."""
 import os
 import sys
 from pathlib import Path

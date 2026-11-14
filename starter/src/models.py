@@ -1,4 +1,3 @@
-"""Shared data contracts; keep traceability from chunk back to source."""
 from dataclasses import dataclass, field
 from typing import Any
 

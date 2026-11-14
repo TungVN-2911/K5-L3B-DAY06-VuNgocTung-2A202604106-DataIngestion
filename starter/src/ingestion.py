@@ -1,4 +1,3 @@
-"""Đọc và chuẩn hóa corpus "AI Engineering" (DailyDoseofDS.com) theo data/manifest.json."""
 from pathlib import Path
 import json
 import re
@@ -19,12 +18,6 @@ LINE_BREAK_HYPHEN = re.compile(r"(\w)-\s*\n\s*(\w)")
 
 
 def load_pdf(path: Path, document_id: str, source: str) -> list[DocumentPage]:
-    """Đọc các trang `counted` trong manifest, giữ trang PDF (1-based) và metadata truy vết.
-
-    Trang bị loại được ghi vào starter/results/skipped_pages.json kèm lý do. Báo lỗi
-    (không fallback) nếu manifest không khớp corpus, hoặc text sau chuẩn hóa lệch số
-    ký tự đã ghi, tức PDF hay hàm chuẩn hóa đã đổi kể từ khi sinh manifest.
-    """
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))["sources"][0]
     if manifest["source_id"] != document_id:
         raise ValueError(f"document_id={document_id} không khớp manifest source_id={manifest['source_id']}")
@@ -59,12 +52,6 @@ def load_pdf(path: Path, document_id: str, source: str) -> list[DocumentPage]:
 
 
 def normalize_text(text: str) -> str:
-    """Chuẩn hóa dùng chung cho pipeline, data/build_manifest.py và benchmark/verify_evidence.py.
-
-    NFKC (tách ligature 'ﬁ' -> 'fi'), bỏ header/footer, ghép từ bị ngắt dòng bằng
-    gạch nối, gộp khoảng trắng. Hạn chế: từ ghép có gạch nối thật rơi đúng cuối
-    dòng cũng bị ghép (vd 'multi-\\nagent' -> 'multiagent').
-    """
     text = unicodedata.normalize("NFKC", text)
     text = HEADER.sub("", text)
     text = FOOTER_PAGE_NUMBER.sub("", text)

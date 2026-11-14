@@ -23,7 +23,6 @@ def slug(title: str) -> str:
 
 
 def chapter_starts(reader: PdfReader) -> list[tuple[int, str, str]]:
-    """Mục cấp cao nhất có tên trong outline = chương: (pdf_page, slug, title)."""
     starts = []
     for item in reader.outline:
         if isinstance(item, list):
