@@ -1,5 +1,54 @@
 # Day 06 · Data Ingestion Engineering
 
+## Bài làm: cách setup và chạy
+
+| Thành phần | Lựa chọn |
+|---|---|
+| Corpus | *AI Engineering* (DailyDoseofDS.com, 2025), 343/384 trang nội dung, xem [data/manifest.json](data/manifest.json) |
+| Benchmark | 20 câu (15 dev / 5 test), xem [benchmark/](benchmark/README.md) |
+| Embedding | Ollama `nomic-embed-text`, 768 chiều, chạy local, chi phí 0, xem [docs/run_environment.md](docs/run_environment.md) |
+| Vector store | PostgreSQL 16 + pgvector 0.8.7 (Docker), cosine, exact search |
+| Chiến lược | A: `fixed_size` 500/50 · B: `by_paragraph` ≤1000 · C: như B + filter `chapter`, xem [artifacts/experiment_log.csv](artifacts/experiment_log.csv) |
+
+**1. Lấy dữ liệu.** PDF không được commit (95 MB, không có giấy phép mở). Tải bản miễn phí từ https://dailydoseofds.github.io/ai-engg-book/, đặt tại `data/AI Engineering Guidebook.pdf`, rồi đối chiếu `sha256` với manifest.
+
+**2. Cài đặt** (chạy trong `starter/`; Windows PowerShell):
+
+```bash
+python -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+Copy-Item .env.example .env
+docker compose -p day6_student_starter up -d --wait
+.venv\Scripts\python scripts/check_setup.py
+ollama pull nomic-embed-text
+```
+
+**3. Kiểm chứng dữ liệu và benchmark** (chạy từ root repo):
+
+```bash
+starter/.venv/Scripts/python data/build_manifest.py
+starter/.venv/Scripts/python benchmark/verify_evidence.py
+```
+
+**4. Chạy pipeline** (chạy trong `starter/`):
+
+```bash
+.venv\Scripts\python -m src.run
+```
+
+Lệnh này nạp trang, chia chunk, embed, upsert hai lần (để kiểm tra nạp lại không trùng), chạy top-3 cho cả 20 câu với A/B/C, rồi ghi kết quả vào `starter/results/`:
+
+| File | Nội dung |
+|---|---|
+| `traces_A.jsonl`, `traces_B.jsonl`, `traces_C.jsonl` | Top-3 của từng câu: chunk id, text, score, trang, chương, evidence hit, tuân thủ filter |
+| `summary.json` | Hit@1 và Hit@3 theo dev/test, số chunk, độ dài, thời gian, kiểm tra nạp lại, phiên bản môi trường |
+| `skipped_pages.json` | Các trang bị loại kèm lý do |
+| `audit/*.csv` | Mẫu chấm tay coherence, metadata, grounding. Chạy lại không ghi đè nhãn đã điền |
+
+Báo cáo: [report/individual/](report/individual/).
+
+---
+
 **Lab cá nhân** · **4 giờ** · **Dữ liệu tự chọn**
 
 Biến tài liệu thành kho tri thức có thể truy xuất cho AI agent, rồi đo xem cách chuẩn bị dữ liệu nào hiệu quả nhất.

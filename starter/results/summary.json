@@ -1,0 +1,234 @@
+{
+  "run_started_at_utc": "2026-11-14T08:04:57+00:00",
+  "document_id": "ai-engineering-2025",
+  "pages_loaded": 343,
+  "questions": {
+    "total": 20,
+    "dev": 15,
+    "test": 5
+  },
+  "top_k": 3,
+  "strategies": {
+    "A": {
+      "chunker": "fixed500-50",
+      "use_filter": false
+    },
+    "B": {
+      "chunker": "para1000",
+      "use_filter": false
+    },
+    "C": {
+      "chunker": "para1000",
+      "use_filter": true
+    }
+  },
+  "environment": {
+    "python": "3.14.3",
+    "pypdf": "6.21.4",
+    "psycopg": "3.3.8",
+    "ollama": "0.40.16",
+    "embedding_model": "nomic-embed-text",
+    "embedding_dimensions": 768,
+    "embedding_prefixes": {
+      "document": "search_document: ",
+      "query": "search_query: "
+    },
+    "postgresql": "16.16 (Debian 16.16-1.pgdg12+1)",
+    "pgvector": "0.8.7",
+    "metric": "cosine distance (<=>), score = 1 - distance",
+    "search": "exact (không tạo index ANN)",
+    "cost_usd": 0
+  },
+  "timing_seconds": {
+    "load_pdf": 18.25,
+    "model_warmup": 11.31,
+    "embed_all_queries": 44.16
+  },
+  "ingest": {
+    "A": {
+      "chunker": "fixed500-50",
+      "use_filter": false,
+      "chunks": 621,
+      "total_chars": 235429,
+      "min_chars": 53,
+      "median_chars": 452,
+      "mean_chars": 379.1,
+      "max_chars": 500,
+      "chunk_seconds": 0.001,
+      "embed_seconds": 70.78,
+      "embedding_shared_with": [],
+      "upsert_seconds": 0.27,
+      "reload_check": {
+        "rows_after_first_upsert": 621,
+        "rows_after_second_upsert": 621,
+        "duplicates": 0
+      }
+    },
+    "B": {
+      "chunker": "para1000",
+      "use_filter": false,
+      "chunks": 385,
+      "total_chars": 221487,
+      "min_chars": 24,
+      "median_chars": 538,
+      "mean_chars": 575.3,
+      "max_chars": 999,
+      "chunk_seconds": 0.008,
+      "embed_seconds": 34.95,
+      "embedding_shared_with": [
+        "C"
+      ],
+      "upsert_seconds": 0.16,
+      "reload_check": {
+        "rows_after_first_upsert": 385,
+        "rows_after_second_upsert": 385,
+        "duplicates": 0
+      }
+    },
+    "C": {
+      "chunker": "para1000",
+      "use_filter": true,
+      "chunks": 385,
+      "total_chars": 221487,
+      "min_chars": 24,
+      "median_chars": 538,
+      "mean_chars": 575.3,
+      "max_chars": 999,
+      "chunk_seconds": 0.008,
+      "embed_seconds": 34.95,
+      "embedding_shared_with": [
+        "B"
+      ],
+      "upsert_seconds": 0.15,
+      "reload_check": {
+        "rows_after_first_upsert": 385,
+        "rows_after_second_upsert": 385,
+        "duplicates": 0
+      }
+    }
+  },
+  "metrics": {
+    "A": {
+      "dev": {
+        "n": 15,
+        "hit1": "10/15",
+        "hit3": "14/15",
+        "gold_page_in_top3": "15/15",
+        "filter_questions": 3,
+        "filter_compliant_top3": "3/3",
+        "hit1_ids": [
+          "q01",
+          "q02",
+          "q04",
+          "q05",
+          "q06",
+          "q07",
+          "q11",
+          "q12",
+          "q14",
+          "q15"
+        ],
+        "hit3_miss_ids": [
+          "q13"
+        ]
+      },
+      "test": {
+        "n": 5,
+        "hit1": "4/5",
+        "hit3": "5/5",
+        "gold_page_in_top3": "5/5",
+        "filter_questions": 2,
+        "filter_compliant_top3": "1/2",
+        "hit1_ids": [
+          "q16",
+          "q17",
+          "q18",
+          "q19"
+        ],
+        "hit3_miss_ids": []
+      }
+    },
+    "B": {
+      "dev": {
+        "n": 15,
+        "hit1": "10/15",
+        "hit3": "13/15",
+        "gold_page_in_top3": "13/15",
+        "filter_questions": 3,
+        "filter_compliant_top3": "2/3",
+        "hit1_ids": [
+          "q01",
+          "q02",
+          "q04",
+          "q05",
+          "q06",
+          "q07",
+          "q11",
+          "q12",
+          "q14",
+          "q15"
+        ],
+        "hit3_miss_ids": [
+          "q10",
+          "q13"
+        ]
+      },
+      "test": {
+        "n": 5,
+        "hit1": "2/5",
+        "hit3": "4/5",
+        "gold_page_in_top3": "4/5",
+        "filter_questions": 2,
+        "filter_compliant_top3": "1/2",
+        "hit1_ids": [
+          "q16",
+          "q17"
+        ],
+        "hit3_miss_ids": [
+          "q19"
+        ]
+      }
+    },
+    "C": {
+      "dev": {
+        "n": 15,
+        "hit1": "10/15",
+        "hit3": "13/15",
+        "gold_page_in_top3": "13/15",
+        "filter_questions": 3,
+        "filter_compliant_top3": "3/3",
+        "hit1_ids": [
+          "q01",
+          "q02",
+          "q04",
+          "q05",
+          "q06",
+          "q07",
+          "q11",
+          "q12",
+          "q14",
+          "q15"
+        ],
+        "hit3_miss_ids": [
+          "q10",
+          "q13"
+        ]
+      },
+      "test": {
+        "n": 5,
+        "hit1": "2/5",
+        "hit3": "4/5",
+        "gold_page_in_top3": "4/5",
+        "filter_questions": 2,
+        "filter_compliant_top3": "2/2",
+        "hit1_ids": [
+          "q16",
+          "q17"
+        ],
+        "hit3_miss_ids": [
+          "q19"
+        ]
+      }
+    }
+  }
+}
