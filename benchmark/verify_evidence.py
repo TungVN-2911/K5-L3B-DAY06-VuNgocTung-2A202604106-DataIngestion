@@ -1,13 +1,3 @@
-"""Kiểm tra benchmark trước khi chạy thử nghiệm.
-
-- evidence_quote (và alt_evidence) có nguyên văn trên trang gold sau chuẩn hóa
-- trang gold thuộc corpus đã tính trong manifest
-- filter khớp metadata của trang gold (vd {"chapter": "rag"})
-- đủ 20 câu, >=15 dev / >=5 test, >=3 câu filter và >=1 câu filter ở test
-- cảnh báo nếu dev và test dùng chung trang gold (nguy cơ rò rỉ)
-
-Chạy từ root repo: starter/.venv/Scripts/python benchmark/verify_evidence.py
-"""
 import json
 import sys
 import unicodedata
@@ -17,7 +7,7 @@ from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "starter"))
-from src.ingestion import normalize  # noqa: E402  (dùng chung với pipeline)
+from src.ingestion import normalize_text  # noqa: E402  (dùng chung với pipeline)
 
 MANIFEST = ROOT / "data" / "manifest.json"
 QUESTIONS = ROOT / "benchmark" / "questions.jsonl"
@@ -27,7 +17,7 @@ def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")
     src = json.loads(MANIFEST.read_text(encoding="utf-8"))["sources"][0]
     pdf = ROOT / src["source_path_or_url"]
-    pages = [normalize(p.extract_text() or "") for p in PdfReader(pdf).pages]
+    pages = [normalize_text(p.extract_text() or "") for p in PdfReader(pdf).pages]
     info = {p["pdf_page"]: p for p in src["pages"]}
     qs = [json.loads(line) for line in QUESTIONS.read_text(encoding="utf-8").splitlines() if line.strip()]
     errors, warnings = [], []

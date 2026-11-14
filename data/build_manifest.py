@@ -1,9 +1,3 @@
-"""Sinh data/manifest.json cho corpus "AI Engineering" (DailyDoseofDS.com).
-
-Chạy từ root repo: starter/.venv/Scripts/python data/build_manifest.py
-Ghi số ký tự sau chuẩn hóa (dùng chung normalize với pipeline), chương lấy từ
-outline (bookmark) của PDF, và quy tắc trang nào được tính vào corpus.
-"""
 import hashlib
 import json
 import re
@@ -15,12 +9,12 @@ import pypdf
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "starter"))
-from src.ingestion import normalize  # noqa: E402
+from src.ingestion import normalize_text  # noqa: E402
 
 PDF = ROOT / "data" / "AI Engineering Guidebook.pdf"
 OUT = ROOT / "data" / "manifest.json"
-FRONT_MATTER_LAST_PAGE = 6  # bìa, trang quảng bá bài test, trang tiêu đề, mục lục p4–6
-MIN_CHARS = 200             # dưới ngưỡng này trang gần như chỉ có hình/ảnh chụp code
+FRONT_MATTER_LAST_PAGE = 6
+MIN_CHARS = 200
 NOT_CHAPTERS = {"How to make the most out of this book and your time?", "AI Engineering"}
 
 
@@ -35,7 +29,7 @@ def chapter_starts(reader: PdfReader) -> list[tuple[int, str, str]]:
         if isinstance(item, list):
             continue
         title = " ".join(item.title.split())
-        if slug(title) and title not in NOT_CHAPTERS:  # bỏ mục rỗng/chỉ có ký tự ẩn (​)
+        if slug(title) and title not in NOT_CHAPTERS:
             starts.append((reader.get_destination_page_number(item) + 1, slug(title), title))
     return sorted(starts)
 
@@ -46,7 +40,7 @@ def main() -> None:
     starts = chapter_starts(reader)
     pages = []
     for number, page in enumerate(reader.pages, start=1):
-        text = normalize(page.extract_text() or "")
+        text = normalize_text(page.extract_text() or "")
         chapter = next((c for c in reversed(starts) if c[0] <= number), None)
         entry = {
             "pdf_page": number,
@@ -71,7 +65,7 @@ def main() -> None:
         "publisher": "Daily Dose of Data Science (DailyDoseofDS.com)",
         "version": "2025 Edition; PDF CreationDate D:20251225185846Z",
         "source_path_or_url": "data/AI Engineering Guidebook.pdf",
-        "committed_to_repo": False,  # 95 MB và chưa rõ quyền tái phân phối; xem .gitignore
+        "committed_to_repo": False,
         "original_url": "TODO: điền URL tải chính thức từ DailyDoseofDS.com",
         "license_or_permission": (
             "Không tìm thấy điều khoản giấy phép/bản quyền trong PDF; bìa chỉ ghi 'FREE'. "
@@ -93,7 +87,7 @@ def main() -> None:
         ),
         "extraction": {
             "tool": f"pypdf {pypdf.__version__}",
-            "normalization": "starter/src/ingestion.py:normalize (NFKC, bỏ header 'DailyDoseofDS.com' và số trang cuối, ghép gạch nối, gộp khoảng trắng)",
+            "normalization": "starter/src/ingestion.py:normalize_text (NFKC, bỏ header 'DailyDoseofDS.com' và số trang cuối, ghép gạch nối, gộp khoảng trắng)",
             "ocr": "không dùng",
             "known_issues": [
                 "nhiều sơ đồ và ảnh chụp code là hình: nội dung trong hình bị mất (không OCR)",

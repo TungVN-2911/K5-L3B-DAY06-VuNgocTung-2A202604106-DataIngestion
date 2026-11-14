@@ -21,7 +21,7 @@
       "counting_rule": "Đếm theo trang PDF vật lý (1-based). Loại p1–6 (front matter), trang bìa mỗi chương và trang dưới 200 ký tự sau chuẩn hóa. printed_page = pdf_page - 1. gold_page trong benchmark dùng pdf_page.",
       "extraction": {
         "tool": "pypdf 6.21.4",
-        "normalization": "starter/src/ingestion.py:normalize (NFKC, bỏ header 'DailyDoseofDS.com' và số trang cuối, ghép gạch nối, gộp khoảng trắng)",
+        "normalization": "starter/src/ingestion.py:normalize_text (NFKC, bỏ header 'DailyDoseofDS.com' và số trang cuối, ghép gạch nối, gộp khoảng trắng)",
         "ocr": "không dùng",
         "known_issues": [
           "nhiều sơ đồ và ảnh chụp code là hình: nội dung trong hình bị mất (không OCR)",
