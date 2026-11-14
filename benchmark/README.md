@@ -1,6 +1,8 @@
-# Benchmark — NIST AI RMF 1.0
+# Benchmark — AI Engineering (DailyDoseofDS.com, 2025 Edition)
 
-[questions.jsonl](questions.jsonl): 20 câu (15 dev / 5 test) trên corpus `nist-ai-100-1` ([data/manifest.json](../data/manifest.json)).
+> ⚠️ **Đã đổi corpus** từ NIST AI RMF 1.0 sang `ai-engineering-2025`. [questions.jsonl](questions.jsonl) hiện vẫn là 20 câu của corpus cũ (`nist-ai-100-1`). Bộ câu này cần **viết lại** trên tài liệu mới, rồi commit trước khi chạy thử pipeline. Bản cũ vẫn xem được trong lịch sử git (commit `8c735aa`).
+
+Corpus: [data/manifest.json](../data/manifest.json), sinh bằng `data/build_manifest.py`.
 
 ## Trường dữ liệu
 
@@ -8,36 +10,30 @@
 | --- | --- |
 | `id`, `split`, `type` | Mã câu, `dev`/`test`, loại câu |
 | `question`, `expected_answer` | Câu hỏi và đáp án mong đợi |
-| `gold_source_id` | Mã tài liệu gold, ở đây là `nist-ai-100-1` |
-| `gold_page` | Danh sách số trang PDF (đếm từ 1); khớp bất kỳ trang nào là đúng |
-| `evidence_quote` | Đoạn trích nguyên văn trên trang `gold_page[0]`, sau chuẩn hóa |
-| `alt_evidence` | (Tùy chọn) đoạn trích cho các trang gold khác |
-| `filter` | `null`, hoặc `{"part": ...}` lấy từ ngữ cảnh câu hỏi |
+| `gold_source_id` | `ai-engineering-2025` |
+| `gold_page` | Danh sách số trang **PDF** (1-based, = số in ở chân trang + 1); khớp bất kỳ trang nào là đúng |
+| `evidence_quote` | Trích nguyên văn trên trang `gold_page[0]` sau chuẩn hóa |
+| `alt_evidence` | (Tùy chọn) `[{"page": ..., "quote": ...}]` cho trang gold khác |
+| `filter` | `null`, hoặc `{"chapter": "<slug>"}` lấy từ ngữ cảnh câu hỏi |
 
-## Phân bố
+Giá trị `chapter` hợp lệ: `llms`, `prompt_engineering`, `fine_tuning`, `rag`, `context_engineering`, `ai_agents`, `mcp`, `llm_optimization`, `llm_evaluation`, `llm_deployment`, `llm_observability`.
 
-| Loại | Dev | Test |
-| --- | --- | --- |
-| direct | q01, q02, q04, q15 | q18 |
-| paraphrase | q05, q08, q09, q10, q13 | – |
-| condition | q03, q12 | q19 |
-| table (bảng Core) | q06, q11, q14 | q20 |
-| có filter `part` | q06, q07, q08 | q16, q17 |
+## Yêu cầu khi viết lại
 
-Dev và test không dùng chung trang gold nào. q07 (p13) và q16 (p37) cùng hỏi về *residual risk*, nhưng Part 1 và phần Core định nghĩa khác nhau, nên filter là yếu tố phân biệt.
+- ≥20 câu, ≥15 dev / ≥5 test, ≥3 câu có filter (≥1 ở test).
+- Chỉ dùng trang có `counted: true` trong manifest.
+- Evidence phải nằm trong **text**, không nằm trong hình. Nhiều sơ đồ và ảnh chụp code của sách không trích được.
 
 ## Kiểm chứng
 
 ```bash
-python benchmark/verify_evidence.py
+starter/.venv/Scripts/python benchmark/verify_evidence.py
 ```
 
-Script chuẩn hóa văn bản PDF: NFKC, bỏ header và footer, ghép từ bị ngắt dòng bằng gạch nối, gộp khoảng trắng. Sau đó script kiểm tra:
+Script dùng chung hàm `normalize` với pipeline ([starter/src/ingestion.py](../starter/src/ingestion.py)): NFKC, bỏ header `DailyDoseofDS.com` và số trang ở cuối, ghép gạch nối, gộp khoảng trắng. Sau đó script kiểm tra:
 
 - evidence có nguyên văn trên trang gold;
 - trang gold thuộc corpus;
-- filter khớp trường `part`;
+- filter khớp metadata;
 - số lượng câu và split đủ theo yêu cầu;
 - dev và test không dùng chung trang.
-
-Riêng q06 dùng `contextspecific` (pdf p31) đúng như văn bản sau chuẩn hóa.

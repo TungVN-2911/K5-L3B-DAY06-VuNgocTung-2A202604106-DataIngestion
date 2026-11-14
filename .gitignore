@@ -8,3 +8,6 @@ __pycache__/
 .DS_Store
 .pytest_cache/
 *.sqlite
+
+# Corpus PDF: 95 MB, chưa xác nhận quyền tái phân phối (xem data/manifest.json)
+data/AI Engineering Guidebook.pdf
