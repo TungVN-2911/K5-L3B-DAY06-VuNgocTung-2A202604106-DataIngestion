@@ -1,7 +1,5 @@
 # Báo cáo cá nhân — Day 6
 
-> **Trạng thái bản nháp:** số liệu tự động (Hit@1, Hit@3, số chunk, thời gian, tuân thủ filter) lấy từ lần chạy `2026-11-14T08:04:57Z` (`starter/results/summary.json`). Các ô **chờ chấm** cần nhãn thủ công trong `starter/results/audit/`. Phần phân tích cần học viên đọc lại và chỉnh sửa trước khi nộp.
-
 ## Dữ liệu và pipeline
 - **Chủ đề, nguồn/quyền, số trang và quy tắc tính trang:**
   - Sách *AI Engineering — System Design Patterns for LLMs, RAG and Agents* (2025 Edition), Akshay Pachaar & Avi Chawla, Daily Dose of Data Science. Nguồn: https://dailydoseofds.github.io/ai-engg-book/, truy cập ngày 2026-09-03.
@@ -40,6 +38,8 @@
 - **Tiêu chí chọn chiến lược, chốt trước khi xem test** (ghi trong `experiment_log.csv`): ưu tiên Evidence Hit@3 trên dev, hòa thì xét grounding trung bình, sau đó là số chunk và thời gian ingest.
 
 ## Kết quả
+Số liệu tự động lấy từ lần chạy `2026-11-14T08:04:57Z` (UTC), ghi trong `starter/results/summary.json`.
+
 | Strategy | Split | Hit@1 (n/N) | Evidence Hit@3 (n/N) | Chunk count | Thời gian | Chi phí |
 |---|---|---|---|---|---|---|
 | A | dev | 10/15 | 14/15 | 621 | embed 70,8 s · upsert 0,27 s | 0 |
@@ -53,29 +53,35 @@ Ghi chú: nạp PDF mất 18,3 s, khởi động model 11,3 s. Kiểm tra nạp 
 
 | Strategy | Coherence trung bình /2 (n) | Metadata đủ và đúng (n/N) | Filter tuân thủ (n/N hoặc N/A) | Grounding 0/1/2 (số câu) và trung bình /2 |
 |---|---|---|---|---|
-| A | chờ chấm (10) | chờ chấm (/15) | dev 3/3 · test 1/2 | chờ chấm |
-| B | chờ chấm (10) | chờ chấm (/15) | dev 2/3 · test 1/2 | chờ chấm |
-| C | chờ chấm (10) | chờ chấm (/15) | dev 3/3 · test 2/2 | chờ chấm |
+| A | 1,4/2 (n=10): 4 mức 2, 6 mức 1 | 15/15 | dev 3/3 · test 1/2 | 0:0 / 1:0 / 2:5 → 2,0/2 |
+| B | 2,0/2 (n=10): 10 mức 2 | 15/15 | dev 2/3 · test 1/2 | 0:1 / 1:0 / 2:4 → 1,6/2 |
+| C | 2,0/2 (n=10): cùng chunk với B | 15/15 | dev 3/3 · test 2/2 | 0:1 / 1:0 / 2:4 → 1,6/2 |
 
 Cột "Filter tuân thủ" là tỷ lệ câu có filter mà **cả top-3** thuộc đúng chương, được tính tự động. A và B không áp dụng filter nên chỉ dùng cột này để so sánh.
 
 **Đường dẫn trace, nhãn thủ công và cách chọn mẫu:**
 - Trace: `starter/results/traces_{A,B,C}.jsonl`.
-- Nhãn chấm tay: `starter/results/audit/coherence_labels.csv` (10 vị trí = điểm giữa của 10 trang được tính đầu tiên theo thứ tự, chốt trước khi xem điểm; C trùng chunk với B), `metadata_audit.csv` (5 câu test × top-3), `grounding_labels.csv` (5 câu test). Người chấm là tác giả, nên có nguy cơ thiên lệch.
+- `starter/results/audit/coherence_labels.csv`: 10 vị trí là điểm giữa của 10 trang được tính đầu tiên (p8–p17), chốt trong code trước khi xem điểm. C dùng chung chunk với B nên chép nhãn của B. Lưu ý mẫu này chỉ nằm trong chương `llms`, có nhiều trang ngắn (A và B trùng nhau ở 4/10 vị trí).
+- `metadata_audit.csv`: 5 câu test × top-3 × 3 chiến lược. Đối chiếu `source`, text chunk với text trang PDF, `printed_page` với số in ở chân trang, `chapter` với outline của PDF.
+- `grounding_labels.csv`: 5 câu test × 3 chiến lược, chấm theo nội dung top-3 so với `expected_answer`, không dựa vào cột evidence hit tự động.
+- **Phương pháp chấm:** nhãn do Claude (LLM) đề xuất sau khi đọc từng chunk, theo thang điểm của GUIDE, kèm lý do từng dòng. Học viên xem xét lại nhãn. Chấm một lần, không có người chấm độc lập thứ hai, nên có nguy cơ thiên lệch.
 
 ## Phân tích và kết luận
-*(Bản nháp: học viên cần đọc lại và chỉnh sửa.)*
 
 - **So sánh A–B và B–C; 2 ví dụ sai có ID câu và nguồn:**
   - **A–B (chỉ khác cách chunk):**
     - Hit@1 trên dev bằng nhau (10/15). A hơn B một câu ở Hit@3 dev (14/15 so với 13/15).
     - Trên test, A cũng cao hơn (Hit@1 4/5 so với 2/5), nhưng chỉ có 5 câu nên sai số rất lớn.
     - Đổi lại, B có ít chunk hơn 38% (385 so với 621) và thời gian embed chỉ bằng khoảng một nửa.
+    - **Coherence: B 2,0/2, A 1,4/2.** Ở 6/10 vị trí, chunk của A bị cắt giữa từ hoặc giữa câu ở cuối (ví dụ `emerges from c`, `trained o`, `ordered str`). B không cắt ngang câu ở vị trí nào.
+    - **Grounding test: A 2,0/2, B 1,6/2.** Khác biệt nằm ở q19: chunk p94 của A chứa đủ chuỗi điều kiện "không có nhãn → kiểm chứng được → RFT", trong khi top-3 của B (p68, p92, p136) không có quy tắc này.
+    - Như vậy, chunk ngắn của A dễ khớp truy vấn hơn nhưng kém mạch lạc. Chunk của B mạch lạc hơn nhưng có lúc không vào được top-3.
   - **B–C (chỉ khác filter):**
     - Hit@1 và Hit@3 không đổi.
     - Filter làm top-3 tuân thủ chương: dev từ 2/3 lên 3/3, test từ 1/2 lên 2/2.
     - Ví dụ q15 (`ai_agents`): B lấy thêm một chunk từ chương `rag` (p146), C thay chunk đó bằng p197. Ví dụ q18 (`llm_deployment`): B lấy p83 thuộc `fine_tuning`, C thay bằng p364.
     - Filter giúp loại nhiễu khác chương, nhưng không làm đổi thứ hạng của chunk đúng.
+    - **Metadata:** 15/15 bản ghi đúng ở cả 3 chiến lược. `page` và `char_start`/`char_end` giúp truy về đúng đoạn trong PDF. `chapter` giúp lọc như ví dụ q18. Hạn chế: `chapter` khá rộng (chương `ai_agents` có 77 trang) nên không phân biệt được các mục trong cùng chương. Ngoài ra, filter chỉ dùng được khi người dùng biết trước chương cần hỏi.
   - **Ví dụ sai 1, q13 (dev, gold p148):**
     - A xếp đúng trang p148 ở hạng 1, nhưng evidence bị cửa sổ 500 ký tự cắt ngang, nên **không** được tính Hit. Đây là lỗi do cách chunk.
     - B giữ trọn evidence trong một chunk nhưng không lấy được p148 trong top-3 (lấy p114, p140, p135 của chương `rag`). Chunk dài hơn có thể làm embedding bị "loãng".
@@ -84,13 +90,13 @@ Cột "Filter tuân thủ" là tỷ lệ câu có filter mà **cả top-3** thu�
     - B trả về p122, p120, p123: các trang lân cận cùng nói về chunking. Evidence 308 ký tự nằm trọn trong chunk p121 của B nhưng chunk này không vào top-3.
 - **Chiến lược chọn, đánh đổi, điều kiện áp dụng:**
   - Theo tiêu chí đã chốt (Hit@3 dev): **chọn A** (14/15 so với 13/15). Cách biệt chỉ là 1 câu trên 15 câu.
-  - Đánh đổi: A tốn gấp khoảng 1,6 lần số chunk và gấp khoảng 2 lần thời gian embed. Coherence của A cần chấm tay để xác nhận giả thuyết rằng A cắt ngang ý.
+  - Đánh đổi: A tốn gấp khoảng 1,6 lần số chunk và gấp khoảng 2 lần thời gian embed, và coherence thấp hơn (1,4 so với 2,0). Nếu chunk được đưa thẳng cho LLM đọc, chunk cụt của A có thể làm câu trả lời thiếu ý. Khi đó B, hoặc A với `size` lớn hơn, đáng cân nhắc.
   - Nếu ứng dụng cần giới hạn phạm vi theo chương, nên bật filter như C, vì filter tăng độ tuân thủ phạm vi mà không làm giảm Hit.
 - **Hạn chế:**
   - Chỉ có 20 câu (5 câu test), nên chênh lệch 1–2 câu không có ý nghĩa thống kê.
-  - Benchmark do AI hỗ trợ soạn và tác giả tự chấm, nên có nguy cơ thiên lệch.
+  - Benchmark do AI hỗ trợ soạn và nhãn thủ công do LLM đề xuất, chỉ một người chấm, nên có nguy cơ thiên lệch. Mẫu coherence chỉ gồm 10 trang của chương `llms`.
   - Evidence Hit đòi khớp nguyên văn, nên chunk chứa đúng nội dung nhưng cắt ngang câu vẫn bị tính trượt (trường hợp q13 với A).
-  - Thời gian chỉ đo một lần, trên một máy (i5-11400H, RTX 3050).
+  - Thời gian chỉ đo một lần, trên một máy (i5-11400H, RTX 3050). Embed 20 câu hỏi từng câu một mất 44,2 s (khoảng 2,2 s/câu), chậm hơn nhiều so với embed chunk theo lô, nên thời gian truy vấn thực tế phụ thuộc mạnh vào cách gọi Ollama.
   - Corpus và model là tiếng Anh; nội dung trong hình bị mất.
 - **Nếu làm lại hoặc mở rộng, cải tiến gì?**
   - Thử B với `max_size` nhỏ hơn (ví dụ 500) để tách riêng ảnh hưởng của *độ dài* chunk với *ranh giới* chunk.
@@ -99,4 +105,4 @@ Cột "Filter tuân thủ" là tỷ lệ câu có filter mà **cả top-3** thu�
   - Thêm câu test để giảm sai số.
 
 ## Sử dụng AI
-Dùng Claude (Claude Code) để: giải thích yêu cầu, review và hoàn thiện code (`ingestion`, `chunking`, `embeddings`, `store`, `evaluation`, `run`), soạn nháp benchmark và báo cáo. Học viên kiểm tra bằng cách chạy `verify_evidence.py`, chạy pipeline, đọc lại câu hỏi và đáp án, và tự chấm nhãn thủ công.
+Dùng Claude (Claude Code) để: giải thích yêu cầu, review và hoàn thiện code (`ingestion`, `chunking`, `embeddings`, `store`, `evaluation`, `run`), soạn nháp benchmark và báo cáo, và đề xuất nhãn coherence, metadata, grounding kèm lý do. Học viên kiểm tra bằng cách chạy `verify_evidence.py`, chạy pipeline, đọc lại câu hỏi và đáp án, và xem xét lại nhãn trong `starter/results/audit/`.
